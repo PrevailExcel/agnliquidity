@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\User;
+use App\Connect;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
@@ -39,11 +39,14 @@ class checkEligibility extends Command
      */
     public function handle()
     {
-        $user = auth()->user();
-        $dt = Carbon::parse($user->paid_on);
-        $dueDate = $dt->addDays(30);
-        if ($dueDate == Carbon::today())
-        User::where('id', $user->id)->update(array('is_eligible', 1));
+        $users = Connect::all();
+        foreach($users as $user){
+        $dt = Carbon::parse($user->created_at)->format('d M, Y');
+        $dueDate = $dt->addDays(31)->format('d M, Y');
+        if ($dueDate == Carbon::today()->format('d M, Y'));
+        Connect::where('id', $user->id)->update(['is_eligible' => 1]);
+        return 0;
+        }
         return 0;
     }
 }

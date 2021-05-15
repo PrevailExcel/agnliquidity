@@ -53,19 +53,31 @@ class ActivityController extends Controller
             if ($getRes['status'] == "Ok" && $getRes['data']['validated'] == true) {
 
                 $user = auth()->user();
-                User::where('id', $user->id)->update(array('is_validated' => 1, 'username' =>$getRes['data']['username']
-                                , 'gender' => $getRes['data']['gender']));
-
+                $checkForUser = User::where('username', $username)->first();
+                if($checkForUser == null){
+                User::where('id', $user->id)
+                    ->update(array('is_validated' => 1,
+                                    'username' =>$getRes['data']['username'],
+                                    'gender' => $getRes['data']['gender']
+                                ));
                 $user1 = array(
-                    'username' => $getRes['data']['username'],
-                    'email' => $getRes['data']['email'],
-                    'gender' => $getRes['data']['gender'],
                     'validated' => $getRes['data']['validated']
                 );
                 echo json_encode($user1);
-            } else if ($getRes['status'] != "Ok" || $getRes['data']['validated'] == false){
+                } else {
+                    $user1 = array(
+                        'validated' => "used"
+                    );
+                    echo json_encode($user1);
+                }
+            } else if ($getRes['status'] == "Ok" && $getRes['data']['validated'] == false){
                 $user1 = array(
-                    'notValid' => "Not Validated yet"
+                    'validated' => $getRes['data']['validated']
+                );
+                return json_encode($user1);
+            } else if ($getRes['status'] != "Ok") {
+                $user1 = array(
+                    'validated' => "notFound"
                 );
                 return json_encode($user1);
             }
@@ -88,9 +100,16 @@ class ActivityController extends Controller
                     'payment_id' => DB::table('vouchers')->where('voucher', $code)->value('payment_method'),
                     'created_at' => Carbon::now(),
                 ]);
-                Activity::create([
+                if($user->referred_by != null){
+                $vv = DB::table('vouchers')->where('voucher', $code)->value('package');
+                $add = ((5/100) * Package::where('id', $vv)->value('price'));
+                User::where('id',$user->myRef->id)->update(['ref_earnings' => $add]);
+                }
+                if (Activity::where('user_id', $user->id)->get('id')->first() == null) {
+                    Activity::create([
                     'user_id' => $user->id
                 ]);
+                    }
                 DB::table('vouchers')->where('voucher', $code)->update(['is_used' => 1]);
             $final = array(
                 'checker' => "Successful",

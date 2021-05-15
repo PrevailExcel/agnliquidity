@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>AGN Investment</title>
+<title>Admin | AGN Investment</title>
 <!-- Tell the browser to be responsive to screen width -->
 <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1" />
 
@@ -60,18 +60,27 @@
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
           <!-- User Account: style can be found in dropdown.less -->
-          <li class="dropdown user user-menu p-ph-res"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <img src="{{ asset('dist/img/img1.jpg') }}" class="user-image" alt="User Image"> <span class="hidden-xs">Ejimadu Prevail</span> </a>
+          <li class="dropdown user user-menu p-ph-res"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <img src="{{ asset('dist/img/img1.jpg') }}" class="user-image" alt="User Image"> <span class="hidden-xs">Admin</span> </a>
             <ul class="dropdown-menu">
               <li class="user-header">
                 <div class="pull-left user-img"><img src="{{ asset('dist/img/img1.jpg') }}" class="img-responsive" alt="User"></div>
-                <p class="text-left">Ejimadu Prevail <small>xcellent@gmail.com</small> </p>
+                <p class="text-left">Admin<small>admin@admin.com</small> </p>
+                  @hasrole('superadmin')                                
                 <div class="view-link text-left"><a href="#">Super Admin</a> </div>
+                @else
+                <div class="view-link text-left"><a href="#">Writer</a> </div>
+                  @endhasrole
               </li>
-              <li><a href="#"><i class="icon-profile-male"></i> My Profile</a></li>
+              <li><a href="{{route('home')}}"><i class="icon-profile-male"></i> My Profile</a></li>
               <li role="separator" class="divider"></li>
-              <li><a href="#"><i class="icon-gears"></i>Setting</a></li>
-              <li role="separator" class="divider"></li>
-              <li><a href="#"><i class="fa fa-power-off"></i> Logout</a></li>
+                @auth
+                    <a onclick="event.preventDefault(); 
+                    document.getElementById('logout-form').submit();">
+                    <li><i class="fa fa-power-off"></i> Logout</a></li>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
+                @endauth
             </ul>
           </li>
         </ul>
@@ -86,8 +95,12 @@
       <div class="user-panel" style="background:url({{ asset('dist/img/img8981.jpg') }})  center;">
         <div class="image text-center"><img src="{{ asset('dist/img/img1.jpg') }}" class="img-circle" alt="User Image"> </div>
         <div class="info">
-          <p>Ejimadu Prevail</p>
+          <p>Admin</p>
+           @hasrole('superadmin')                                
           <a href="#">Super Admin</a></div>
+                @else
+          <a href="#">Writer</a></div>
+                  @endhasrole
       </div>
 
       <!-- sidebar menu: : style can be found in sidebar.less -->
@@ -114,22 +127,19 @@
           </li>
         <li class="treeview"> <a href="#"> <i class="fa fa-bullseye"></i> <span>Packages</span> <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a>
           <ul class="treeview-menu">
-            <li><a href="{{route('packages.create')}}">Add New Package</a></li>
             <li><a href="{{route('packages.index')}}">View All Packages</a></li>
-          </ul>
-        </li>
-        <li class="treeview"> <a href="#"> <i class="fa fa-briefcase"></i> <span>Payment History</span> <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a>
-          <ul class="treeview-menu">
-            <li><a href="#">Naira Payment</a></li>
-            <li><a href="#">Bitcoin Payments</a></li>
-            <li><a href="#">Agricoin</a></li>
           </ul>
         </li>
         <li class="treeview"> <a href="#"> <i class="fa fa-bullseye"></i> <span>Make Payments</span> <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a>
           <ul class="treeview-menu">
-            <li><a href="#">Naira Payments</a></li>
-            <li><a href="#">Bitcoin Payments</a></li>
-            <li><a href="#">Agricoin Payments</a></li>
+            <li><a href="{{route('pay.naira')}}">Naira Payments</a></li>
+            <li><a href="{{route('pay.bitcoin')}}">Bitcoin Payments</a></li>
+            <li><a href="{{route('pay.agricoin')}}">Agricoin Payments</a></li>
+          </ul>
+        </li>
+        <li class="treeview"> <a href="#"> <i class="fa fa-briefcase"></i> <span>Payment History</span> <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a>
+          <ul class="treeview-menu">
+            <li><a href="{{route('payment.history')}}">Full Payment History</a></li>
           </ul>
         </li>
         <li class="treeview"> <a href="#"> <i class="fa fa-envelope-o "></i> <span>Users</span> <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a>
@@ -137,18 +147,10 @@
             <li><a href="{{route('admin.viewUsers')}}">See All Users</a></li>
           </ul>
         </li>
-        <li class="treeview"> <a href="#"> <i class="fa fa-briefcase"></i> <span>Support & FAQs</span> <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a>
+        <li class="treeview"> <a href="#"> <i class="fa fa-bank "></i> <span>Assign Writer</span> <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a>
           <ul class="treeview-menu">
-            <li><a href="ui-cards.html" class="active">See all Questions</a></li>
-            <li><a href="ui-user-card.html">Responded Messages</a></li>
-            <li><a href="ui-tab.html">support History</a></li>
-          </ul>
-        </li>
-        <li class="treeview"> <a href="#"> <i class="fa fa-briefcase"></i> <span>History</span> <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a>
-          <ul class="treeview-menu">
-            <li><a href="ui-cards.html" class="active">Payment History</a></li>
-            <li><a href="ui-user-card.html">Users History</a></li>
-            <li><a href="ui-tab.html">Tab</a></li>
+            <li><a href="{{route('assign.writer')}}">Make a user a writer</a></li>
+            <li><a href="{{route('all.writers')}}">See selected writers</a></li>
           </ul>
         </li>
         <li class="treeview"> <a href="#"> <i class="fa fa-briefcase"></i> <span>Settings</span> <span class="pull-right-container"> <i class=""></i> </span> </a>
@@ -194,6 +196,7 @@
 <script>
     $(function () {
         $('#usersToBePaid').DataTable()
+        $('#assign').DataTable()
         $('#listAll').DataTable({
             'paging'      : true,
             'lengthChange': false,
@@ -209,7 +212,7 @@
 <script src="{{ asset('dist/plugins/table-expo/xls.core.min.js') }}"></script>
 <script src="{{ asset('dist/plugins/table-expo/tableexport.js') }}"></script>
 <script>
-    $("table").tableExport({formats: ["xlsx","xls", "csv", "txt"],    });
+    $("table").tableExport({formats: ["xls", "csv", "txt"],    });
 </script>
 
 </body>

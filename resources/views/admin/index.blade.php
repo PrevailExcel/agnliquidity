@@ -42,8 +42,8 @@
           <div class="info-box bg-aqua"> <span class="info-box-icon bg-transparent"><i class="ti-bar-chart"></i></span>
             <div class="info-box-content">
               <h6 class="info-box-text text-white">Paid Cashout</h6>
-              <h1 class="text-white">$2309</h1>
-              <span class="progress-description text-white"> 50% Increase in 30 Days </span> </div>
+              <h1 class="text-white">${{number_format($totalPrice2)}}</h1>
+              <span class="progress-description text-white"> ₦{{number_format($totalPrice2*500)}} Total in Naira </span> </div>
             <!-- /.info-box-content -->
           </div>
           <!-- /.info-box -->
@@ -53,8 +53,8 @@
           <div class="info-box bg-orange"> <span class="info-box-icon bg-transparent"><i class="ti-money"></i></span>
             <div class="info-box-content">
               <h6 class="info-box-text text-white">Total Income</h6>
-              <h1 class="text-white">$12222</h1>
-              <span class="progress-description text-white"> 35% Increase in 30 Days </span> </div>
+              <h1 class="text-white">${{number_format($totalPrice)}}</h1>
+              <span class="progress-description text-white">  ₦{{number_format($totalPrice*500)}} Total in Naira</span> </div>
             <!-- /.info-box-content -->
           </div>
           <!-- /.info-box -->
@@ -109,38 +109,36 @@
           <div class="info-box">
             <div class="d-flex flex-wrap">
               <div>
-                <h4 class="text-black">Payment Method Chart</h4>
+                <h4 class="text-black">Popular Payment Methods</h4>
               </div>
             </div>
             <div class="m-t-2">
-            	<canvas id="pie-chart" height="260"></canvas>
+            	<canvas id="pie-chart" height="200"></canvas>
+              <ul>
+            <li> Naira <span style="float: right">{{$payment1}}</span></li>
+            <li> Bitcoin <span style="float: right">{{$payment2}}</span></li>
+            <li> Agricoin <span style="float: right">{{$payment3}}</span></li>
+            </ul>
             </div>
           </div>
         </div>
         <div class="col-lg-5">
           <div class="info-box">
-            <h4 class="m-b-2 text-black">Recent Activities</h4>
-            <div class="sl-item sl-primary">
-              <div class="sl-content"><small class="text-muted"><i class="fa fa-user position-left"></i> 5 mins ago</small>
-                <p>New User just registered with a $50,000 Package using a referral id: 1092008</p>
-              </div>
-            </div>
-            <div class="sl-item sl-danger">
-              <div class="sl-content"><small class="text-muted"><i class="fa fa-user position-left"></i> 8 mins ago</small>
-                <p>New User just registered with a $100,000 Package using a refferal id: 0896665</p>
-              </div>
-            </div>
-            <div class="sl-item sl-success">
-              <div class="sl-content"><small class="text-muted"><i class="fa fa-user position-left"></i> 10 mins ago</small>
-                <p>New User just registered with a $10,000 Package using a refferal id: 696757</p>
-              </div>
-            </div>
-            <div class="sl-item sl-warning">
-              <div class="sl-content"><small class="text-muted"><i class="fa fa-user position-left"></i> 12 mins ago</small>
-                <p>New User just registered with a $900,000 Package using a refferal id: 4782384</p>
-              </div>
-            </div>
-          </div>
+            <h4 class="m-b-2 text-black">Popular Pacakges</h4>
+            <ul style="padding: 37px 20px;">
+            <li><b>Package Name</b> <span style="float: right"><b>Users</b></span></li> <br>
+            <li> Starter Package <span style="float: right">{{$package1}}</span></li> 
+            <li> Basic Package <span style="float: right">{{$package2}}</span></li>
+            <li> Standard Package <span style="float: right">{{$package3}}</span></li> 
+            <li> Master Package <span style="float: right">{{$package4}}</span></li> 
+            <li> Elite Package <span style="float: right">{{$package5}}</span></li> 
+            <li> Ultra Package <span style="float: right">{{$package6}}</span></li> 
+            <li> Legend Package <span style="float: right">{{$package7}}</span></li> 
+            <li> Premium Package <span style="float: right">{{$package8}}</span></li> 
+            <li> Ultimate Package <span style="float: right">{{$package9}}</span></li>
+            <li> Deluxe Package <span style="float: right">{{$package10}}</span></li> 
+            </ul>
+            </div>           
         </div>
         <div class="col-lg-7">
           <div class="info-box">
@@ -215,31 +213,29 @@
                 <thead>
                 <tr>
                   <th>Username</th>
-                  <th>Package</th>
+                  <th>Amount</th>
                   <th>Payment format</th>
                   <th>Date</th>
-                  <th>Pay</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    @foreach($users as $user)
-                        <td>{{$user->name}}</td>
-                        <td>{{$user->pack->name}}</td>
-                    @if($user->payment_method == 1)
+                    @foreach($users as $use)
+                      <tr>
+                        <td>{{\App\User::where('id',$use->user_id)->value('name')}}</td>
+                        <td>${{number_format($use->act_earnings + \App\User::where('id',$use->user_id)->value('ref_earnings'), 2)}}</td>
+                    @if($use->payment_id == 1)
                         <td><span class="text-success">Naira</span></td>
-                        @elseif($user->payment_method == 2)
+                        @elseif($use->payment_id == 2)
                             <td><span class="text-warning">Bitcoin</span></td>
                         @else
                         <td><span class="text-primary">AgriCoin</span></td>
                         @endif
-                        <td>{{\Carbon\Carbon::parse($user->paid_on)->addDays(30)->format('d M, Y')}}</td>
-                  <td><button type="button" class="btn btn-success">Pay</button></td>
+                        <td>{{\Carbon\Carbon::parse($use->created_at)->addDays(30)->format('d M, Y')}}</td>
+                       </tr>
                     @endforeach
-                </tr>
                 </tbody>
               </table>
-          See the complete list <a href="#">Here</a>
+          See the complete list for <a href="{{route('pay.naira')}}">Naira</a>, <a href="{{route('pay.bitcoin')}}">Bitcoin</a> and <a href="{{route('pay.agricoin')}}">Agricoin</a>.
                   </div>
                 </div>
 

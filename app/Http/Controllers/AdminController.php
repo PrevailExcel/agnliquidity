@@ -31,20 +31,60 @@ class AdminController extends Controller
      */
     public function index()
     {
+        $all = Connect::all();
         $posts = Post::all()->take(5);
         $count = count(User::all());
         $countC = count(Connect::all());
-        $withdraw = Connect::where('want_to_withdraw', 1)->count();
+        $withdraw = Connect::where('want_to_withdraw', 1)->where('is_paid', 0)->count();
         $mainuser = User::all();
         $totalPrice = 0;
-        foreach ($mainuser as $pro){
-            $profit = $pro->package;
+        $totalPrice2 = 0;
+        foreach ($all as $proo){
+            $profit = $proo->package_id;
             $price = 1 * (Package::where('id', $profit)->value('price'));
             $totalPrice += $price;
         }
-        $users = User::where('want_to_withdraw', 1)->orderBy('paid_on', 'DESC')->take(10);
+        foreach ($all as $pro){
+            $price = 1 * (Connect::where('act_earnings', $pro->act_earnings)->where('is_paid', 1)->value('act_earnings'));
+            $totalPrice2 += $price;
+        }
+        $users = Connect::where('want_to_withdraw', 1)->where('is_paid', 0)->orderBy('id', 'DESC')->get()->take(10);
         $newusers = User::orderBy('id', 'DESC')->get()->take(5);
-        return view('admin.index', compact('users','totalPrice', 'withdraw', 'newusers', 'posts', 'countC', 'count'));
+        $package1 = count(Connect::where('package_id', 1)->get());
+        $package2 = count(Connect::where('package_id', 2)->get());
+        $package3 = count(Connect::where('package_id', 3)->get());
+        $package4 = count(Connect::where('package_id', 4)->get());
+        $package5 = count(Connect::where('package_id', 5)->get());
+        $package6 = count(Connect::where('package_id', 6)->get());
+        $package7 = count(Connect::where('package_id', 7)->get());
+        $package8 = count(Connect::where('package_id', 8)->get());
+        $package9 = count(Connect::where('package_id', 9)->get());
+        $package10 = count(Connect::where('package_id', 10)->get());
+        
+        $payment1 = count(Connect::where('payment_id', 1)->get());
+        $payment2 = count(Connect::where('payment_id', 2)->get());
+        $payment3 = count(Connect::where('payment_id', 3)->get());
+        return view('admin.index',  compact('users',
+                                            'totalPrice', 
+                                            'totalPrice2', 
+                                            'withdraw', 
+                                            'newusers', 
+                                            'posts', 
+                                            'package1',
+                                            'package2',
+                                            'package3',
+                                            'package4',
+                                            'package5',
+                                            'package6',
+                                            'package7',
+                                            'package8',
+                                            'package9',
+                                            'package10',
+                                            'payment1',
+                                            'payment2',
+                                            'payment3',
+                                            'countC', 
+                                            'count'));
     }
 
     public function makeVendor()
@@ -87,7 +127,7 @@ class AdminController extends Controller
     }
 
     public function listVoucher(){
-        $vouchers = DB::table('vouchers')->orderBy('id', 'DESC')->get()->all();
+        $vouchers = DB::table('vouchers')->where('is_used', 0)->orderBy('id', 'DESC')->get()->all();
         return view("admin.listvoucher", compact('vouchers'));
     }
 
@@ -101,6 +141,108 @@ class AdminController extends Controller
         $users = User::all();
         return view('admin.listusers', compact('users'));
     }
+
+    public function payInNaira()
+    {
+        $posts = Connect::where('want_to_withdraw', 1)->where('payment_id', 1)->where('is_paid', 0)->get();
+        return view('admin.payinnaira', compact('posts'));
+    }
+    
+
+    public function assignWriter()
+    {
+        $posts = User::all();
+        return view('admin.assignwriter', compact('posts'));
+    }
+    
+
+
+    public function allWriters()
+    {
+        $posts = User::all();
+        return view('admin.allwriters', compact('posts'));
+    }
+    
+
+
+    public function assignWriterNow(Request $request)
+    {
+        $user = $request->input('id');
+        if(Db::table('model_has_roles')->where('model_id',$user)->first() == null){
+        Db::table('model_has_roles')->insert([
+            'role_id' => 2,
+            'model_type' => 'App\User',
+            'model_id' => $user
+        ]);
+        Session::flash('assigned', 'Successful assigned user as a writer');
+        return redirect()->route('all.writers');
+        } else {
+        Session::flash('not_assigned', 'User Already assigned as writer');
+        return redirect()->route('assign.writer');
+        }
+    }
+    
+
+
+
+    public function assignWriterDelete(Request $request)
+    {
+        $user = $request->input('id');
+        $removed = Db::table('model_has_roles')->where('role_id', 2)->where('model_id', $user)->update([
+            'role_id' => 2,
+            'model_type' => 'App\User',
+            'model_id' => rand(99999999, 999999999), 
+        ]);
+        if($removed){
+        Session::flash('assigned', 'Removed user as a writer');
+        return redirect()->route('all.writers');
+        } else {
+        Session::flash('not_assigned', 'Not Successful');
+        return redirect()->route('all.writers');
+        }
+    }
+    
+
+    public function payAsap(Request $request){
+        $id = $request->input('id');
+        $user = Connect::where('id', $id)->value('user_id');
+        $amount = $request->input('amount');
+        $done = Connect::where('id', $id)->update([
+            'is_paid' => 1,
+            'paid' => $amount,
+            'was_paid_on' => Carbon::now()
+         ]);
+         $vvv = User::where('id', $user)->value('ref_earnings');
+         $vvvv = User::where('id', $user)->value('act_earnings');
+         $done2 = User::where('id', $user)->update([
+            'act_earnings' => $vvvv - ($amount - $vvv),
+            'ref_earnings' => 0,
+         ]);
+         if($done && $done2){
+         Session::flash('paid', 'User have been confirmed paid and Package nullified');
+         return redirect()->back();
+         }
+    }
+
+    public function payInBitcoin()
+    {
+        $posts = Connect::where('want_to_withdraw', 1)->where('payment_id', 2)->where('is_paid', 0)->get();
+        return view('admin.payinbitcoin', compact('posts'));
+    }
+    
+
+    public function payInAgricoin()
+    {
+        $posts = Connect::where('want_to_withdraw', 1)->where('payment_id', 3)->where('is_paid', 0)->get();
+        return view('admin.payinagricoin', compact('posts'));
+    }
+    
+    public function paymentHistory()
+    {
+        $posts = Connect::where('is_paid', 1)->orderBy('id', 'DESC')->get();
+        return view('admin.paymenthistory', compact('posts'));
+    }
+    
     public function viewSingleUsers(Request $request)
     {
         $id = $request->input('id');

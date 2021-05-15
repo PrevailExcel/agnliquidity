@@ -20,6 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('phone');
             $table->string('country');
             $table->string('gender')->nullable();
+            $table->string('username')->nullable();
             $table->string('image')->nullable();
             $table->string('affiliate_id')->unique();
             $table->unsignedBigInteger('referred_by')->nullable();

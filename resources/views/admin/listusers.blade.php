@@ -120,7 +120,7 @@
                                 <th>Affiliate ID</th>
                                 <th>Referred by</th>
                                 <th>Downlines</th>
-                                <th>Paid</th>
+                                <th>Activated</th>
                                 <th>View</th>
                             </tr>
                             </thead>
@@ -144,7 +144,7 @@
                                     null
                                         @endif</td>
                                     <td>{{count($post->myRefs)}}</td>
-                                    <td>@if($post->have_paid == 1)Yes
+                                    <td>@if($post->is_approved == 1)Yes
                                         @else
                                             No @endif </td>
                                     <td>

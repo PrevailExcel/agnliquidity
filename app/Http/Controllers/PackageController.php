@@ -32,7 +32,7 @@ class PackageController extends Controller
      */
     public function create()
     {
-        return view('admin.createpackage');
+        //return view('admin.createpackage');
 
     }
 
@@ -44,22 +44,22 @@ class PackageController extends Controller
      */
     public function store(Request $request)
     {
-                $validated = $request->validate([
-                    'pname' => 'required|unique:packages,name',
-                    'price'=> 'required',
-                ]);
+            //     $validated = $request->validate([
+            //         'pname' => 'required|unique:packages,name',
+            //         'price'=> 'required',
+            //     ]);
 
-            $final = Package::create([
-                'name' => $validated['pname'],
-                'price'=> $validated['price'],
-            ]);
-                if($final){
-                Session::flash('Created', "Package created successfully!");
-                return redirect()->route('packages.index');
-                }else{
-                    Session::flash('failure', "Package created successfully!");
-                    return Redirect::back();
-                 }
+            // $final = Package::create([
+            //     'name' => $validated['pname'],
+            //     'price'=> $validated['price'],
+            // ]);
+            //     if($final){
+            //     Session::flash('Created', "Package created successfully!");
+            //     return redirect()->route('packages.index');
+            //     }else{
+            //         Session::flash('failure', "Package created successfully!");
+            //         return Redirect::back();
+            //      }
     }
 
     /**
@@ -81,7 +81,7 @@ class PackageController extends Controller
      */
     public function edit(Package $package)
     {
-        return view('admin.editpackage', compact('package'));
+       // return view('admin.editpackage', compact('package'));
 
     }
 
@@ -95,18 +95,18 @@ class PackageController extends Controller
     public function update(Request $request, Package $package)
     {
 
-                $validated = $request->validate([
-                    'pname' => 'required',
-                    'price'=> 'required',
-                ]);
+            //     $validated = $request->validate([
+            //         'pname' => 'required',
+            //         'price'=> 'required',
+            //     ]);
 
-            $final = $package->update($request->all());
-                if($final){
-                Session::flash('Edited', "package edited successfully!");
-                return redirect()->route('packages.index');
-                }else{
-                    Session::flash('Edited', "package edited successfully!");
-                    return redirect()->back();                }
+            // $final = $package->update($request->all());
+            //     if($final){
+            //     Session::flash('Edited', "package edited successfully!");
+            //     return redirect()->route('packages.index');
+            //     }else{
+            //         Session::flash('Edited', "package edited successfully!");
+            //         return redirect()->back();                }
 
     }
 
@@ -118,9 +118,9 @@ class PackageController extends Controller
      */
     public function destroy(Package $package)
     {
-        $package->delete();
+        // $package->delete();
 
-        Session::flash('Deleted', "Package deleted successfully!");
-        return redirect()->route('packages.index');
+        // Session::flash('Deleted', "Package deleted successfully!");
+        // return redirect()->route('packages.index');
     }
 }

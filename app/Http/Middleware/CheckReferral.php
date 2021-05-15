@@ -19,7 +19,7 @@ class CheckReferral
     {
         if( !$request->hasCookie('referral') && $request->query('ref') ) {
             return redirect($request->url())->withCookie(cookie()
-            ->make('referral', $request->query('ref'), 1));
+            ->make('referral', $request->query('ref'), 5000));
         }
 
         return $next($request);

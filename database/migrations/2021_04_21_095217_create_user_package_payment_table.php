@@ -18,8 +18,12 @@ class CreateUserPackagePaymentTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('package_id');
             $table->unsignedBigInteger('payment_id');
+            $table->integer('paid')->default(0);
+            $table->integer('act_earnings')->default(0);
             $table->boolean('want_to_withdraw')->default(false);
             $table->boolean('is_eligible')->default(false);
+            $table->boolean('is_paid')->default(false);
+            $table->dateTime('was_paid_on')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

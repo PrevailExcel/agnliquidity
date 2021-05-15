@@ -6,6 +6,7 @@ use App\Activity;
 use App\Package;
 use App\PaymentMethod;
 use App\Post;
+use App\Connect;
 use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\DB;
@@ -36,17 +37,10 @@ class HomeController extends Controller
             $dt = Carbon::parse($user->paid_on);
             $cashOutDate = $dt->addDays(30)->format('d M, Y');
             $sPost = Post::latest()->limit(1)->get();
-            $refD = 0;
-            foreach($user->connect as $pac){
-                  $refM = Package::where('id',$pac->package_id)->value('price');
-                  $refE = (5 / 100) * $refM;
-                  $refD  += $refE;
-                  User::where('id', $user['id'])->update(array('ref_earnings' => round($refD, 2)));
-                }
                 if($user->act != null) {
                     $actstot = $user->act->total;
                     $actscom = $user->act->completed;
-                    $actsper = (($actscom / 100) * $actstot);
+                    $actsper = round((($actscom / $actstot) * 100));
                 } else{
                     $actstot = 0;
                     $actscom = 0;
@@ -63,11 +57,14 @@ class HomeController extends Controller
                     if ($user->have_shared != 1 && $user->is_approved == 1) {
                         $actEarn3 =0;
                         foreach($user->connect as $pac){
+                            if($pac->is_eligible === 0){
                             $roi = PaymentMethod::where('id',$pac->payment_id)->value('roi');
                             $price = Package::where('id',$pac->package_id)->value('price');
                             $actEarn = (( $roi / 100) * $price );
                             $actEarn2 = round(($actEarn + $price) / 30, 2);
                             $actEarn3 += $actEarn2;
+                            Connect::where('id', $pac->id)->update(array('act_earnings' => $pac->act_earnings + $actEarn2));
+                            }
                         };
                         User::where('id', $user['id'])->update(array('have_shared' => 1));
                         User::where('id', $user->id)->update(array('act_earnings' => $user->act_earnings + $actEarn3));
@@ -98,19 +95,12 @@ class HomeController extends Controller
             return redirect()->route('home');
     }
     public function addProfile(Request $request){
-        $validated = $request->validate([
-            'name' => 'required',
-            'phone'=> 'required',
-            'gender'=> 'required',
-            'email'=> 'required',
-        ]);
 
         $user = auth()->user();
         User::where('id', $user->id)->update([
-            'name' => $validated['name'],
-            'phone'=> $validated['phone'],
-            'gender'=> $validated['gender'],
-            'email'=> $validated['email'],
+            'name' => $request->input('name'),
+            'phone'=> $request->input('phone'),
+            'gender'=> $request->input('gender'),
         ]);
             Session::flash('profileAd', "Your Profile details have been updated Succesfully");
             return redirect()->route('home');
@@ -144,11 +134,50 @@ class HomeController extends Controller
     }
 
     public function withdraw(Request $request){
+        $id = $request->input('id');
         $user = auth()->user();
-        User::where('id', $user->id)->update([
-            'want_to_withdraw' => 1,
-        ]);
-        return back();
+        $payer = Connect::where('id', $id)->value('payment_id');
+        $bank = User::where('id', $user->id)->value('bank');
+        $bankName = User::where('id', $user->id)->value('bank_name');
+        $bankNumber = User::where('id', $user->id)->value('account_number');
+        $bitcoin = User::where('id', $user->id)->value('bitcoin_add');
+        $agricoin = User::where('id', $user->id)->value('agricoin_add');
+        if($payer == 1){
+            if($bank != null && $bankName != null && $bankNumber != null){
+                Connect::where('id', $id)->update([
+                    'want_to_withdraw' => 1,
+                ]);
+                Session::flash('withdraw', "You've successfully applied for withdrawal");
+                return back();
+            } else {
+                Session::flash('no_withdraw', "Update your bank details properly and apply again");
+                return back();
+            }
+        } else if($payer == 2){
+            if($bitcoin != null){
+                Connect::where('id', $id)->update([
+                    'want_to_withdraw' => 1,
+                ]);
+                Session::flash('withdraw', "You've successfully applied for withdrawal");
+                return back();
+            } else {
+                Session::flash('no_withdraw', "Update your wallet address and apply again");
+                return back();
+            }
+
+        } else if($payer == 3){
+            if($agricoin != null){
+                Connect::where('id', $id)->update([
+                    'want_to_withdraw' => 1,
+                ]);
+                Session::flash('withdraw', "You've successfully applied for withdrawal");
+                return back();
+            } else {
+                Session::flash('no_withdraw', "Update your wallet address and apply again");
+                return back();
+            }
+
+        }
     }
 
     public function addAgricoinAddress(Request $request){

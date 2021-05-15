@@ -12,7 +12,7 @@
     <meta name="description" content="@yield('description')">
     <meta name="image" content="@yield('image')">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link href="{{ asset('assets/images/favicon/favicon.png') }}" rel="icon">
+    <link rel="shortcut icon" href="{{asset('asset/images/favicon.ico')}}">
 
 <!-- Fonts
     ============================================= -->
@@ -300,8 +300,8 @@
                         <ul>
                             <li><a href="#">Bitcoin.com</a></li>
                             <li><a href="#">Reevatech Africa</a></li>
-                            <li><a href="#">Agricoin</a></li>
-                            <li><a href="#">NGNT</a></li>
+                            <li><a href="https://agrichainx.com">Agricoin</a></li>
+                            <li><a href="https://node.agrichainx.com">Node Agrichainx</a></li>
                         </ul>
                     </div>
                 </div><!-- .col-md-2 end -->
@@ -313,8 +313,6 @@
                     <div class="widget-content">
                         <ul>
                             <li><a href="/home">My Dashboard</a></li>
-                            <li><a href="/ref">Refferal Link</a></li>
-                            <li><a href="admin/dash">Admin</a></li>
                         </ul>
                     </div>
                 </div><!-- .col-md-2 end -->

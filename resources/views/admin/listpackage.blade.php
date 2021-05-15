@@ -42,8 +42,8 @@
                 <tr>
                   <th>Id</th>
                   <th>Package Name</th>
-                  <th>Price</th>
-                  <th>Actions</th>
+                  <th>$ Price</th>
+                  <th>Naira Price</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -51,22 +51,8 @@
                 <tr>
                   <td>{{$package->id}}</td>
                   <td>{{$package->name}}</td>
-                  <td>{{$package->price}}</td>
-                  <td>
-                   <ul class="list-inline m-0">
-                        <li class="list-inline-item">
-                            <a class="btn btn-success btn-sm rounded-0" href="{{route('packages.edit', $package->id)}}" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></a>
-                        </li>
-                        <li class="list-inline-item">
-                             <form action="{{route('packages.destroy', $package->id)}}" method="POST">
-                             @csrf
-                             @method('DELETE')
-                            <button class="btn btn-danger btn-sm rounded-0" type="submit" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></button>
-
-                             </form>
-                        </li>
-                    </ul>
-                  </td>
+                  <td>${{number_format($package->price)}}</td>
+                  <td>₦{{number_format($package->price * 500)}}</td>
                 </tr>
                 @empty
                 <tr>

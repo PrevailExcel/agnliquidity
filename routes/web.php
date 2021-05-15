@@ -44,10 +44,20 @@ Route::post('/withdraw-now', 'HomeController@withdraw')->name('withdraw.now');
      Route::post('approve/user', 'AdminController@approveUsers')->name('approve.user');
      Route::post('generate/voucher', 'AdminController@generateVouch')->name('voucher.generate');
      Route::get('users/single', 'AdminController@viewSingleUsers')->name('viewSingleUsers');
-    Route::resource('posts', 'PostController');
+     Route::get('pay/users/naira', 'AdminController@payInNaira')->name('pay.naira');
+     Route::get('pay/users/bitcoin', 'AdminController@payInBitcoin')->name('pay.bitcoin');
+     Route::get('pay/users/agricoin', 'AdminController@payInAgricoin')->name('pay.agricoin');
+     Route::post('pay/up/asap', 'AdminController@payAsap')->name('pay.asap');
+     Route::get('payment/history', 'AdminController@paymentHistory')->name('payment.history');
+     Route::get('assign/writer', 'AdminController@assignWriter')->name('assign.writer');
+     Route::get('all/writers', 'AdminController@allWriters')->name('all.writers');
+     Route::post('assign/writer/now', 'AdminController@assignWriterNow')->name('assign.writer.now');
+     Route::post('assign/writer/delete', 'AdminController@assignWriterDelete')->name('assign.writer.delete');
     Route::resource('packages', 'PackageController');
 
 });
+
+Route::resource('posts', 'PostController');
 
 //Route::get('/cookie', function () {
 //    return Cookie::get('referral');

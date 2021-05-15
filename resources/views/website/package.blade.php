@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>Buy Packages | AGN Investment</title>
+    <title>Buy Packages | AGN Liquidity</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta content="" name="description" />
@@ -154,12 +154,9 @@
                                 <div class="list-header">Contact any of these vendors and pay the appropriate amount to them, send proof of payment,
                                 and they will send you a unique voucher code
                                      for the package</div> <br>
-                                    <li class="list-group-item">08028374623 <span style="float: right";><a href="tel:08028374623"><i class="fa fa-phone"> Call</i> </a> </span></li>
-                                    <li class="list-group-item">08028374623 <span style="float: right";><a href="tel:08028374623"><i class="fa fa-phone"> Call</i> </a> </span></li>
-                                    <li class="list-group-item">08028374623 <span style="float: right";><a href="tel:08028374623"><i class="fa fa-phone"> Call</i> </a> </span></li>
-                                    <li class="list-group-item">08028374623 <span style="float: right";><a href="tel:08028374623"><i class="fa fa-phone"> Call</i> </a> </span></li>
-                                    <li class="list-group-item">08028374623 <span style="float: right";><a href="tel:08028374623"><i class="fa fa-phone"> Call</i> </a> </span></li>
-                                </ol>
+                                    <li class="list-group-item">09035870933 <span style="float: right";><a href="tel:08028374623"><i class="fa fa-phone"> Call</i> </a> </span></li>
+                                    <li class="list-group-item">09057278387 <span style="float: right";><a href="tel:08028374623"><i class="fa fa-phone"> Call</i> </a> </span></li>
+                                 </ol>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Close</button>
@@ -175,8 +172,8 @@
                         <div class="inner-box">
                             <div class="plan-header text-center">
                                 <h3 class="plan-title bg-secondary">{{$package->name}} Voucher</h3>
-                                <h2 class="plan-price">₦{{$package->price}}</h2>
-                                <div class="plan-duration">${{$package->price / 500}}</div>
+                                <h2 class="plan-price"><b>${{number_format($package->price)}}</b></h2>
+                                <h6><div >₦{{number_format($package->price * 500)}}</div></h6>
                             </div>
                             <ul class="plan-stats list-unstyled text-center">
                                 <li>50% ROI when you pay with Agricoin</li>

@@ -2,11 +2,11 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>{{$user->name}}'s Dashboard | AGN Investment</title>
+    <title>{{$user->name}}'s Dashboard | AGN Liquidity</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta content="" name="description" />
-    <meta content="AGN Investments" name="Prevail Ejimadu" />
+    <meta content="Reevatech Africa" name="Developer" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     <!-- App favicon -->
@@ -82,6 +82,11 @@
                             @hasrole('superadmin')                                
                             <div class="dropdown-item noti-title">
                                 <a href="{{url('/admin/dash')}}" class="text-overflow m-0">SuperAdmin Panel</a>
+                            </div>
+                            @endhasrole
+                            @hasrole('writer')                                
+                            <div class="dropdown-item noti-title">
+                                <a href="{{url('/posts/create')}}" class="text-overflow m-0">Write Post</a>
                             </div>
                             @endhasrole
 
@@ -169,6 +174,18 @@
                     {{ session('Bcoin') }}
                 </div>
             @endif
+            @if (session('withdraw'))
+
+                <div class="alert alertX alert-success" style="float:left;">
+                    {{ session('withdraw') }}
+                </div>
+            @endif
+            @if (session('no_withdraw'))
+
+                <div class="alert alertX alert-danger" style="float:left;">
+                    {{ session('no_withdraw') }}
+                </div>
+            @endif
         </div>
 
 
@@ -187,7 +204,7 @@
                         </div>
 
                         <p class="text-muted m-t-10">
-                            I understand the power of proper investment and membership. AGN Investment for life.
+                            I understand the power of proper investment and membership. AGN Liquidity Investment for life.
                         </p>
 
 
@@ -282,36 +299,44 @@
                                                     <h3 class="panel-title">Withdrawal status</h3>
                                                 </div>
                                                 <div class="panel-body">
-                                                    <h6 class="font-13 m-t-0 m-b-30">Here are the Investment packages you've bought so far</h6>
+                                                    <h6 class="font-13 m-t-0 m-b-30">Current Active Investments</h6>
                                                     <ul class="nav nav-tabs">
                                                         @foreach($package as $pack)
+                                                        @if ($pack->is_paid == 0)
                                                             <li class="nav-item">
-                                                                <a href="#{{ \App\Package::where('id',$pack->package_id)->value('name')}}1" data-toggle="tab" aria-expanded="true" class="nav-link">
+                                                                <a href="#{{ \App\Package::where('id',$pack->package_id)->value('name').$pack->id}}1" data-toggle="tab" aria-expanded="true" class="nav-link">
                                                                     {{ \App\Package::where('id',$pack->package_id)->value('name')}}
                                                                 </a>
                                                             </li>
+                                                        @endif
                                                         @endforeach
                                                     </ul>
                                                     <div class="tab-content">
                                                         @foreach($package as $pack)
-                                                            <div class="tab-pane fade" id="{{ \App\Package::where('id',$pack->package_id)->value('name')}}1">
-                                                                <p>Amount: <b>{{ \App\Package::where('id',$pack->package_id)->value('price')}}</b>
+                                                        @if ($pack->is_paid == 0)
+                                                            <div class="tab-pane fade" id="{{ \App\Package::where('id',$pack->package_id)->value('name').$pack->id}}1">
+                                                                <p>Accrued Amount: <b>${{ number_format($pack->act_earnings)}}</b>
+                                                                    <br> Ref Bonus: <b>${{ number_format($user->ref_earnings, 2)}}</b>
                                                                     <br> Payment Method: <b>{{ \App\PaymentMethod::where('id',$pack->payment_id)->value('name')}}</b>
-                                                                    <br> ROI: <b>{{ \App\PaymentMethod::where('id',$pack->payment_id)->value('roi')}}%</b>
                                                                     <br> Withdrawal date: <b>{{\Carbon\Carbon::parse($pack->created_at)->addDays(30)->format('d M, Y')}}</b>
                                                                     <hr>
                                                                     @if ($pack->is_eligible  == 0)
                                                                     <button class="btn btn-dark" disabled type="button">Withdraw</button><br>
                                                                      <span class="text-dark">You cannot apply for this withdrawal yet</span>
                                                                     @elseif ($pack->is_eligible  == 1  && $pack->want_to_withdraw  == 0)
-                                                                    <button class="btn btn-info" type="button">Withdraw</button><br>
+                                                                    <form method="POST" action="{{route('withdraw.now')}}">
+                                                                    @csrf
+                                                                    <input type="hidden" name="id" value="{{$pack->id}}">
+                                                                    <button class="btn btn-info" type="submit">Withdraw + Ref Bonus</button><br>
                                                                      <span class="text-info">You can now apply for withdrawal</span>
+                                                                    <form>
                                                                     @elseif ($pack->is_eligible  == 1 && $pack->want_to_withdraw  == 1)
                                                                     <button class="btn btn-success" disabled type="button">Applied</button><br>
                                                                      <span class="text-success">You will receive your payment soon</span>
                                                                      @endif
                                                                 </p>
                                                             </div>
+                                                        @endif
                                                         @endforeach
                                                     </div>
                                                 </div>
@@ -410,7 +435,7 @@
                                     <ul class="nav nav-tabs">
                                         @foreach($package as $pack)
                                             <li class="nav-item">
-                                                <a href="#{{ \App\Package::where('id',$pack->package_id)->value('name')}}" data-toggle="tab" aria-expanded="true" class="nav-link">
+                                                <a href="#{{ \App\Package::where('id',$pack->package_id)->value('name').$pack->id}}" data-toggle="tab" aria-expanded="true" class="nav-link">
                                                     {{ \App\Package::where('id',$pack->package_id)->value('name')}}
                                                 </a>
                                             </li>
@@ -418,8 +443,11 @@
                                     </ul>
                                     <div class="tab-content">
                                         @foreach($package as $pack)
-                                            <div class="tab-pane fade" id="{{ \App\Package::where('id',$pack->package_id)->value('name')}}">
-                                                <p>Amount: <b>{{ \App\Package::where('id',$pack->package_id)->value('price')}}</b>
+                                            <div class="tab-pane fade" id="{{ \App\Package::where('id',$pack->package_id)->value('name').$pack->id}}">
+                                                @if ($pack->is_paid == 1)
+                                                        <br><b class="text-success">Paid</b>
+                                                @endif
+                                                <p>Amount: <b>${{ number_format(\App\Package::where('id',$pack->package_id)->value('price'))}}</b>
                                                     <br> Payment Method: <b>{{ \App\PaymentMethod::where('id',$pack->payment_id)->value('name')}}</b>
                                                     <br> ROI: <b>{{ \App\PaymentMethod::where('id',$pack->payment_id)->value('roi')}}%</b>
                                                     <br> Withdrawal date: <b>{{\Carbon\Carbon::parse($pack->created_at)->addDays(30)->format('d M, Y')}}</b>
@@ -450,7 +478,10 @@
                                             <p id="sBody">{{\Str::words($post->postbody,50)}} </p><br>
                                             @if($user->have_shared == 0)
                                             <button type="button" class="facebookShare btn btn-info btn-rounded"><i class="fa fa-facebook"></i> Facebook</button>
-                                            <button type="button" class="whatsappShare btn btn-success btn-rounded"><i class="fa fa-whatsapp"></i> Whatsapp</button>
+                                            <a href="whatsapp://send?text=*{{$post->title}}* %0a {{url("/sponsored-post/". $post->id)}}"
+                                           data-action="share/whatsapp/share" class="whatsappShare">
+                                            <button type="button" class="btn btn-success btn-rounded"><i class="fa fa-whatsapp"></i> Whatsapp</button>
+                                            </a>
                                             @else
                                                 <button type="button btn-rounded btn-block" style="width: 100%" disabled
                                                         class="btn btn-outline-success successful"><b>Congratulations, Shared for today</b></button>
@@ -470,7 +501,7 @@
                                                     class="pull-right">{{$actscom}} tasks</span></h6>
                                             <div class="progress">
                                                 <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar"
-                                                     aria-valuenow="{{$actscom}}" aria-valuemin="0" aria-valuemax="{{$actstot}}" style="width: {{$actscom}}%;">
+                                                     aria-valuenow="{{$actscom}}" aria-valuemin="0" aria-valuemax="{{$actstot}}" style="width: {{$actsper}}%;">
                                                     <span class="sr-only">{{$actscom}}</span>
                                                 </div>
                                             </div>
@@ -482,7 +513,7 @@
                                             </h5>
                                             <div class="progress">
                                                 <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar"
-                                                     aria-valuenow="{{$actscom}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$actscom}}%;">
+                                                     aria-valuenow="{{$actscom}}" aria-valuemin="0" aria-valuemax="{{$actstot}}" style="width: {{$actsper}}%;">
                                                     <span class="sr-only">{{$actsper}}% Complete</span>
                                                 </div>
                                             </div>
@@ -507,8 +538,8 @@
                             <div class="card-box">
                                 <i class="fa fa-info-circle text-muted pull-right inform" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Total earnings from all your packages."></i>
                                 <h6 class="m-t-0 text-dark">Activity Earnings</h6>
-                                <h3 class="text-primary text-center m-b-30 m-t-30">₦<span>@if($user->act_earnings == null) 0.00 @else{{$user->act_earnings}} @endif </span></h3>
-                                <p class="text-muted mb-0">Total earnings from all your packages. <span class="pull-right">{{count($user->connect)}}</span></p>
+                                <h3 class="text-primary text-center m-b-30 m-t-30">$<span>@if($user->act_earnings == null)0.00 @else{{number_format($user->act_earnings, 2)}} @endif </span></h3>
+                                <p class="text-muted mb-0">Total earnings from your active packages. <span class="pull-right">{{count($user->connect)}}</span></p>
                             </div>
                         </div>
 
@@ -516,8 +547,8 @@
                             <div class="card-box">
                                 <i class="fa fa-info-circle text-muted pull-right inform" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Referral Earnings"></i>
                                 <h6 class="m-t-0 text-dark">Referral Earnings</h6>
-                                <h3 class="text-light-blue text-center m-b-30 m-t-30">₦<span> @if($user->ref_earnings == null) 0.00 @else {{$user->ref_earnings}} @endif</span></h3>
-                                <p class="mb-0 text-muted">5% of whatever package your downline invests </p>
+                                <h3 class="text-light-blue text-center m-b-30 m-t-30">$<span>@if($user->ref_earnings == null)0.00 @else {{number_format($user->ref_earnings, 2)}} @endif</span></h3>
+                                <p class="mb-0 text-muted">5% of whatever package your downline invests <span class="pull-right">{{count($user->myRefs)}}</span></p>
                             </div>
                         </div>
 
@@ -525,7 +556,7 @@
                             <div class="card-box">
                                 <i class="fa fa-info-circle text-muted pull-right inform" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Sum of all your earnings"></i>
                                 <h6 class="m-t-0 text-dark">Total Earnings</h6>
-                                <h3 class="text-success text-center m-b-30 m-t-30">₦<span>{{$user->act_earnings + $user->ref_earnings}}</span></h3>
+                                <h3 class="text-success text-center m-b-30 m-t-30">$<span>{{number_format($user->act_earnings + $user->ref_earnings, 2)}}</span></h3>
                                 <p class="mb-0 text-muted">What you can withdraw</p>
                             </div>
                         </div>
@@ -602,7 +633,7 @@
                             @csrf
                                 <div class="form-group">
                                     <label for="FullName">Full Name</label>
-                                    <input type="text" value="{{$user->name}}" name="name" class="form-control">
+                                    <input type="text" required value="{{$user->name}}" name="name" class="form-control">
                                 </div>
                                 <div class="form-group">
                                     <label for="Email">Email</label>
@@ -721,15 +752,6 @@
 
 <script>
 
-    $(".facebookShare").click(function () {
-        $.get("/activity", function () {
-            $(".facebookShare").hide();
-            $(".whatsappShare").hide();
-            $(".successful").show();
-            alert("Shared");
-        });
-    });
-
     function copyRef() {
         /* Get the text field */
         var copyText = document.getElementById("reflink");
@@ -844,14 +866,34 @@
                 if (respons.validated === true) {
                     $('#usernameValidation').hide()
                     $('#afterValidation').show();
-                    $('#username').val(respons.username);
-                    $('#gender').val(respons.gender);
-                } else if (respons.validated === false){
+                } else if(respons.validated === false) {
+                    swal(
+                        {
+                            title: 'User not verified',
+                            html: 'Please make your investment of at least 1k or <br> Register ' +
+                                '<b><a href="https://node.agrichainx.com/signup">Here</a> </b>' +
+                                ' to get your username',
+                            type: 'error',
+                            confirmButtonColor: '#4fa7f3'
+                        }
+                    )
+                } else if(respons.validated == "notFound") {
                     swal(
                         {
                             title: 'User not found',
                             html: 'Check your username or <br> Register ' +
-                                '<b><a href="https://node.agrichainx.com/signup">Here</a> </b>' +
+                                '<b><a href="https://node.agrichainx.com/signup"  target="_blank">Here</a> </b>' +
+                                ' to get your username',
+                            type: 'error',
+                            confirmButtonColor: '#4fa7f3'
+                        }
+                    )
+                } else if(respons.validated == "used") {
+                    swal(
+                        {
+                            title: 'Username is used already',
+                            html: 'Check your username or <br> Register ' +
+                                '<b><a href="https://node.agrichainx.com/signup"  target="_blank">Here</a> </b>' +
                                 ' to get your username',
                             type: 'error',
                             confirmButtonColor: '#4fa7f3'
@@ -870,6 +912,43 @@
         });
     });
 </script>
+
+    <script>
+        $(document).ready(function () {
+
+            setShareLinks();
+
+            function socialWindow(url) {
+                var left = (screen.width - 570) / 2;
+                var top = (screen.height - 570) / 2;
+                var params = "menubar=no,toolbar=no,status=no,width=570,height=570,top=" + top + ",left=" + left;
+                window.open(url, "NewWindow", params);
+            }
+
+            function setShareLinks() {
+                var pageUrl = encodeURIComponent(document.URL);
+                var tweet = encodeURIComponent($("meta[property='og:description']").attr("content"));
+                $(".facebookShare").on("click", function () {
+                    url = "https://www.facebook.com/sharer.php?u={{url("/sponsored-post/".$post->id)}}";
+                    socialWindow(url);
+                    $.get("/activity", function () {
+                        $(".faa-facebook").hide();
+                        $(".faa-whatsapp").hide();
+                        $(".sucesssful").show();
+                    });
+                });
+
+
+                $(".whatsappShare").on("click", function () {
+                    $.get("/activity", function () {
+                        $(".faa-facebook").hide();
+                        $(".faa-whatsapp").hide();
+                        $(".sucesssful").show();
+                    });                });
+            }
+
+        });
+    </script>
 
 <script>
     $(document).ready(function() {

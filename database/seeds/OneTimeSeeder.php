@@ -56,43 +56,53 @@ class OneTimeSeeder extends Seeder
             
             Package::create([
                 'name' => 'Starter',
-                'price' => '20'
+                'price' => '20',
+                'coinbase_link' => 'https://commerce.coinbase.com/checkout/95da7f03-b8b7-4001-b48d-1c8dc9d7c2ff'
             ]);
             Package::create([
                 'name' => 'Basic',
-                'price' => '40'
+                'price' => '40',
+                'coinbase_link' => 'https://commerce.coinbase.com/checkout/8084940b-3827-4226-8281-0656664fba90'
             ]);
             Package::create([
                 'name' => 'Standard',
-                'price' => '100'
+                'price' => '100',
+                'coinbase_link' => 'https://commerce.coinbase.com/checkout/57b4fccd-1bf3-4b6d-a19e-4200862e1e1d'
             ]);
             Package::create([
                 'name' => 'Master',
-                'price' => '140'
+                'price' => '140',
+                'coinbase_link' => 'https://commerce.coinbase.com/checkout/6dc3e9f1-5a6e-4ae6-a400-fd7f39b468c4'
             ]);
             Package::create([
                 'name' => 'Elite',
-                'price' => '200'
+                'price' => '200',
+                'coinbase_link' => 'https://commerce.coinbase.com/checkout/4e0badc5-ba8e-47ae-94ee-ef5e0d7766f8'
             ]);
             Package::create([
                 'name' => 'Ultra',
-                'price' => '400'
+                'price' => '400',
+                'coinbase_link' => 'https://commerce.coinbase.com/checkout/50345db2-36a0-463a-9905-c2d07dd1770b'
             ]);
             Package::create([
                 'name' => 'Legend',
-                'price' => '1000'
+                'price' => '1000',
+                'coinbase_link' => 'https://commerce.coinbase.com/checkout/882dca6b-0e7c-424b-9218-e548d0243603'
             ]);
             Package::create([
                 'name' => 'Premium',
-                'price' => '2000'
+                'price' => '2000',
+                'coinbase_link' => 'https://commerce.coinbase.com/checkout/0bda17e8-9f80-4da2-a8d0-f923fc8a6d11'
             ]);
             Package::create([
                 'name' => 'Ultimate',
-                'price' => '4000'
+                'price' => '4000',
+                'coinbase_link' => 'https://commerce.coinbase.com/checkout/ddb1a6d6-e3ec-4e72-9d63-f3cae453e64a'
             ]);
             Package::create([
                 'name' => 'Deluxe',
-                'price' => '10000'
+                'price' => '10000',
+                'coinbase_link' => 'https://commerce.coinbase.com/checkout/1bd2673e-6a30-4485-bc25-1e4d5c33db3d'
             ]);
 
             

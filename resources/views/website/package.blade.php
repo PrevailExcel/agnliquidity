@@ -131,7 +131,6 @@
                             <div class="modal-body">
                                 <div class="text-center list-group">
                                     <button data-toggle="modal" data-target="#nairaModal" class="list-group-item list-group-item-action">Naira</button>
-                                    <button class="list-group-item list-group-item-action">Bitcoin</button>
                                     <button class="list-group-item list-group-item-action">Agricoin</button>
                                 </div>
                             </div>
@@ -154,8 +153,10 @@
                                 <div class="list-header">Contact any of these vendors and pay the appropriate amount to them, send proof of payment,
                                 and they will send you a unique voucher code
                                      for the package</div> <br>
-                                    <li class="list-group-item">09035870933 <span style="float: right";><a href="tel:08028374623"><i class="fa fa-phone"> Call</i> </a> </span></li>
-                                    <li class="list-group-item">09057278387 <span style="float: right";><a href="tel:08028374623"><i class="fa fa-phone"> Call</i> </a> </span></li>
+                                    <li class="list-group-item">09035870933 <span style="float: right";><a href="tel:09035870933"><button type="button" class="btn btn-rounded btn-info"><i class="fa fa-phone"></i> Call </button> &nbsp;
+                                     </a> <a href="https://wa.me/2349035870933"><button type="button" class="btn btn-rounded btn-custom"><i class="fa fa-whatsapp"></i> Whatsapp</button> </a> </span></li>
+                                    <li class="list-group-item">09057278387 <span style="float: right";><a href="tel:09057278387"><button type="button" class="btn btn-rounded btn-info"><i class="fa fa-phone"></i> Call </button> &nbsp;
+                                    </a> <a href="https://wa.me/2349057278387"><button type="button" class="btn btn-rounded btn-custom"><i class="fa fa-whatsapp"></i> Whatsapp</button> </a> </span></li>
                                  </ol>
                             </div>
                             <div class="modal-footer">
@@ -181,7 +182,8 @@
                                 <li>Cashout in 30 days</li>
                             </ul>
                             <div class="text-center">
-                                <a data-toggle="modal" data-target="#paymentModal" class="btn btn-custom btn-rounded waves-effect waves-light">Buy Voucher Now</a>
+                                <a data-toggle="modal" data-target="#paymentModal" class="btn btn-custom btn-rounded waves-effect waves-light">Buy with Naira or Agricoin</a>
+                                <a href="{{$package->coinbase_link}}" target="_blank" class="btn btn-secondary btn-rounded waves-effect waves-light">Buy With Bitcoin</a>
                             </div>
                         </div>
                     </article>

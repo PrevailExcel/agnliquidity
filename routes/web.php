@@ -17,12 +17,20 @@ Route::get('/', function () {
     return view('website.index');
 });
 Route::get('/testing', function () {
-    return view('website.package');
+    return view('website.howItWorks');
+});
+Route::get('/how-it-works', function () {
+    return view('website.howItWorks');
+});
+Route::get('/about-us', function () {
+    return view('website.about');
 });
 Route::get('/admin/login', function () {
     return view('admin.login');
 });
 
+Route::get('/testAPI', 'ConnectController@index')->name('test.api');
+Route::get('/testAPI2', 'ConnectController@getAll')->name('test.all');
 Route::post('/uploadpop', 'ActivityController@uploadPop')->name('upload.pop');
 Route::post('/check-voucher', 'ActivityController@activateVoucher')->name('activate.voucher');
 Route::get('/validate-user', 'ActivityController@amIValid')->name('am.IValid');

@@ -3,7 +3,7 @@
 <head>
 <!-- Document Meta
     ============================================= -->
-    <meta property="og:">
+    <meta property="og:image" content="{{asset('asset/images/favicon.ico')}}">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <!--IE Compatibility Meta-->
@@ -33,41 +33,7 @@
       <script src="{{ asset('assets/js/html5shiv.js') }}"></script>
       <script src="{{ asset('assets/js/respond.min.js') }}"></script>
     <![endif]-->
-<style>
-.faa {
-  padding: 15px;
-  font-size: 30px;
-  width: 45%;
-  text-align: center;
-  text-decoration: none;
-  margin: 5px 2px;
-}
 
-.faa:hover {
-    opacity: 0.7;
-}
-
-.faa-instagram {
-  background: #bb0000;
-  color: white;
-}
-
-.faa-whatsapp {
-  background: #00b489;
-  color: white;
-}
-
-.faa-facebook {
-  background: #3B5998;
-  color: white;
-}
-
-.faa-twitter {
-  background: #55ACEE;
-  color: white;
-}
-
-</style>
 <!-- Document Title
     ============================================= -->
 <title>@yield('title')</title>
@@ -102,31 +68,25 @@
 	<!-- li end -->
 
 	<!-- Pages Menu -->
+    
+	<li class="">
+		<a href="/about-us"  class=" menu-item">About Us</a>
+
+	</li>
+
 	<li class="">
 		<a href="/how-it-works" class=" menu-item">How It Works</a>
 		<ul class="dropdown-menu">
 		</ul>
 	</li>
 	<!-- li end -->
-	<!-- Services Menu-->
-	<li class="">
-		<a href="/affiliate" class=" menu-item">Affiliate</a>
-
-	</li>
+	
 	<!-- li end -->
-	<!-- Studies Menu-->
 	<li class="">
 		<a href="/coupon-vendors"  class=" menu-item">Coupon Vendors</a>
 
 	</li>
-	<!-- li end -->
-	<li class="">
-		<a href="/about"  class=" menu-item">About Us</a>
-
-	</li>
-	<!-- li end -->
-	<!-- Blog Menu-->
-     &nbsp &nbsp &nbsp
+     &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
 
 
  @if (Route::has('login'))
@@ -140,7 +100,7 @@
 	<li class="">
         		<!-- Module Signup  -->
 <div class="module module-signup ">
-	<a class="menu-item btn-popup" data-hover="shop" style="color:#ffffff;" data-toggle="modal" data-target="#signupModule">Sign In</a>
+	<a class="menu-item btn-popup" data-hover="shop" style="color:#FFD700;" data-toggle="modal" data-target="#signupModule">Sign In</a>
 	<div class="modal fade signup-popup" tabindex="-1" role="dialog" id="signupModule">
 		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			<span aria-hidden="true">&times;</span>
@@ -150,7 +110,7 @@
 				<div class="modal-body">
 					<div class="row">
 						<div class="signup-form-container text-center">
-								<h4>Sign In</h4>
+								<h4 style="color: #79ac36">Sign In</h4>
 								<form id="signupPopupForm" style="opacity:0.9; " form method="POST" action="{{ route('login') }}" class="signupform">
                                                     @csrf
  <div>
@@ -178,12 +138,6 @@
                                </div>
 									<button type="submit" name="submit" class="btn btn--primary btn--block">Sign in to your dashboard</button>
 								</form>
-                                 @if (Route::has('password.request'))
-                                    <a class="btn btn-link" href="{{ route('password.request') }}">
-                                        {{ __('Forgot Your Password?') }}
-                                    </a>
-                                @endif
-
 								<!-- form end -->
 										<div class="signin">
 									<a href="/register">Register Here</a>
@@ -227,14 +181,16 @@
                                         @csrf
                                     </form>
     @else
-    	<a href="page-consultation.html" class="btn btn--white btn--bordered btn--rounded">Get Started</a>
+    	<a href="/register" class="btn btn--white btn--bordered btn--rounded">Get Started</a>
                     @endauth
             @endif
 
 </div>					<!-- Module Social -->
 <div class="module module-social pull-left">
-	<a href="#"><i class="fa fa-facebook"></i></a>
+	<a href="#"><i class="fa fa-telegram"></i></a>
 	<a href="#"><i class="fa fa-twitter"></i></a>
+	<a href="#"><i class="fa fa-facebook"></i></a>
+	<a href="#"><i class="fa fa-instagram"></i></a>
 	<a href="#"><i class="fa fa-linkedin"></i></a>
 </div><!-- .module-social end -->				</div>
 			</div>
@@ -283,9 +239,8 @@
                     </div>
                     <div class="widget-content">
                         <ul>
-                            <li><a href="/about">About Us</a></li>
+                            <li><a href="/about-us">About Us</a></li>
                             <li><a href="/how-it-works">How It Works</a></li>
-                            <li><a href="/">Latest News</a></li>
                             <li><a href="/contact">Contact Us</a></li>
                             <li><a href="/how-it-works">FAQs</a></li>
                         </ul>

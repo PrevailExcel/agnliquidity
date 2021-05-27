@@ -4,7 +4,7 @@
     {{$post->title}}
 @endsection
 @section('description')
-    This is a description
+    {{\Str::words($post->postbody,10)}}
 @endsection
 @section('url')
     {{url("/sponsored-post/". $post->id)}}
@@ -23,7 +23,7 @@
 
     <section id="page-title" class="page-title bg-overlay bg-overlay-dark bg-parallax">
         <div class="bg-section">
-            <img src="{{asset('assets/images/page-titles/3.jpg')}}" alt="Background" />
+            <img src="{{asset('assets/images/page-titles/10.jpg')}}" alt="Background" />
         </div>
         <div class="container">
             <div class="row">

@@ -44,6 +44,7 @@
                         <form action="{{route('pay.asap')}}" method="POST">
                         @csrf
                         <input type="hidden" name="id" value="{{$post->id}}">
+                        <input type="hidden" name="amount" value="{{$post->act_earnings + \App\User::where('id',$post->user_id)->value('ref_earnings')}}">
                     <button class="btn btn-warning btn-sm rounded-0" type="submit" data-toggle="tooltip" data-placement="top" title="Paid">Paid</button>
 
                         </form>

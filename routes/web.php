@@ -29,7 +29,7 @@ Route::get('/admin/login', function () {
     return view('admin.login');
 });
 
-Route::get('/testAPI', 'ConnectController@index')->name('test.api');
+Route::get('/coinbase/webhook', 'ConnectController@index')->name('test.api');
 Route::get('/testAPI2', 'ConnectController@getAll')->name('test.all');
 Route::post('/uploadpop', 'ActivityController@uploadPop')->name('upload.pop');
 Route::post('/check-voucher', 'ActivityController@activateVoucher')->name('activate.voucher');
